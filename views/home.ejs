@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Free Chat</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+         <div class="col-md-6 mb-3 col-sm-12 fixed-top">
+
+          <form id="form" action="" style="margin-top:20px;">
+            <div class="row">
+              <div class="col-md-10 mb-3">
+                <input type="text" autocomplete="off"  id="input" class="form-control" placeholder="Enter your message">
+              </div>
+              <div class="col-md-2 mb-3">
+                <button class="btn btn-danger">Send</button>
+              </div>
+            </div>
+            <div class="row client-info">
+              <div class="col mb-3">
+                <strong>Client ID: </strong> <span id='cid'></span>
+              </div>
+            </div>
+          </form> 
+
+         </div>
+
+
+         <div class="col-md-6 mb-3 col-sm-12 offset-sm-6 message_container" id="message_container">
+
+              <ul id="messages" class="list-group"></ul>
+           
+        </div>
+      </div>
+
+      
+    </div>
+  
+    
+
+    <script src="https://cdn.socket.io/4.0.1/socket.io.js"></script>
+    <script>
+
+      var socket = io('/');
+
+      var clientId = null;
+      
+      socket.on('connect',()=>{
+
+          console.log(socket.id);
+          document.getElementById('cid').innerHTML = socket.id;
+          clientId = socket.id; 
+
+      });
+
+      var username = "User";
+      username = prompt("Please Enter Your Name");
+      if(!username){
+        username = "User";
+      } 
+
+      var form = document.getElementById("form");
+      var input = document.getElementById("input");
+      
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", { username: username, message: input.value,clientId:clientId });
+          input.value = "";
+        }
+      });
+      socket.on("chat message", function (msgObject) {
+        var item = document.createElement("li");
+        item.className = 'list-group-item';
+        if(clientId == msgObject.clientId){
+
+          item.className = 'list-group-item list-group-item-secondary';
+
+        }
+
+        item.innerHTML =
+          "<b>" + msgObject.username + "</b> : " + msgObject.message;
+        messages.appendChild(item);
+        //window.scrollTo(0, document.body.scrollHeight);
+        var element = document.getElementById("message_container");
+       element.scrollTop = element.scrollHeight;
+      });
+    </script>
+  </body>
+</html>

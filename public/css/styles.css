@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding-bottom: 3rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif;
+      background-image: url('/images/back.jpg');
+  }
+
+ .container {
+     margin:auto;
+     padding:20px;
+     max-width: 100%;
+ }
+
+ .client-info{
+     color:#fff;
+ }
+
+ .message_container{
+     height: 100vh;
+     overflow: scroll;
+     overflow-x: hidden;
+ }
+
+ @media only screen and (max-width: 576px) {
+    .message_container{
+
+        margin-top:180px;
+        overflow: scroll;
+        height: 300px;
+
+    }
+  }
